@@ -1,0 +1,1 @@
+Generate 5 technical interview questions without answers for a candidate skilled in: {technologies}. The list of questions should be in a json format.
