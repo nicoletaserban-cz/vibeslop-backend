@@ -37,4 +37,8 @@ public class InterviewService {
 
         return chatClient.call(prompt).getResult().getOutput().getText();
     }
+
+    public String saveInterviewFeedBack(String feedback){
+        return "Succes";
+    }
 }
