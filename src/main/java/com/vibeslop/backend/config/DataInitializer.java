@@ -3,12 +3,15 @@ package com.vibeslop.backend.config;
 import com.vibeslop.backend.model.Client;
 import com.vibeslop.backend.model.Developer;
 import com.vibeslop.backend.model.Interview;
+import com.vibeslop.backend.model.User;
 import com.vibeslop.backend.repository.ClientRepository;
 import com.vibeslop.backend.repository.DeveloperRepository;
 import com.vibeslop.backend.repository.InterviewRepository;
+import com.vibeslop.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,11 +29,13 @@ public class DataInitializer implements CommandLineRunner {
     private final DeveloperRepository developerRepository;
     private final ClientRepository clientRepository;
     private final InterviewRepository interviewRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
     public void run(String... args) throws Exception {
-        if (developerRepository.count() > 0) {
+        if (userRepository.count() > 0) {
             log.info("Database already contains data. Skipping initialization.");
             return;
         }
@@ -38,6 +43,13 @@ public class DataInitializer implements CommandLineRunner {
         log.info("Initializing database with sample data...");
 
         // Create and save developers
+        User adminUser = User.builder()
+                .username("admin")
+                .password(passwordEncoder.encode("password"))
+                .build();
+        userRepository.save(adminUser);
+        log.info("Created default user: admin/password");
+
         Developer dev1 = new Developer();
         dev1.setName("Alice Johnson");
         dev1.setSkills(Set.of("Java", "Spring Boot", "PostgreSQL", "Docker"));
