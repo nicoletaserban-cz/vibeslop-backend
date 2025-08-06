@@ -9,11 +9,9 @@ import com.vibeslop.backend.model.Interview;
 import com.vibeslop.backend.repository.ClientRepository;
 import com.vibeslop.backend.repository.DeveloperRepository;
 import com.vibeslop.backend.repository.InterviewRepository;
-import org.springframework.ai.chat.prompt.Prompt;
+import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.ai.ollama.OllamaChatModel;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,24 +19,14 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-
+@RequiredArgsConstructor
 public class InterviewService {
 
     private final OllamaChatModel chatClient;
-    private final PromptTemplate promptTemplate;
     private final InterviewRepository interviewRepository;
     private final DeveloperRepository developerRepository;
     private final ClientRepository clientRepository;
-
-    public InterviewService(OllamaChatModel chatClient,
-                            @Value("classpath:/prompts/interview-questions.st") Resource interviewQuestionsPromptResource, InterviewRepository interviewRepository, DeveloperRepository developerRepository, ClientRepository clientRepository) {
-        this.chatClient = chatClient;
-        // The parser can be initialized once.
-        this.promptTemplate = new PromptTemplate(interviewQuestionsPromptResource);
-        this.interviewRepository = interviewRepository;
-        this.developerRepository = developerRepository;
-        this.clientRepository = clientRepository;
-    }
+    private final PromptTemplate interviewQuestionsPromptTemplate;
 
     /**
      * Generates interview questions based on a list of technologies.*
@@ -48,7 +36,7 @@ public class InterviewService {
      * @return A list of generated interview questions.
      */
     public String generateQuestions(List<String> technologies) {
-        Prompt prompt = this.promptTemplate.create(Map.of(
+        var prompt = this.interviewQuestionsPromptTemplate.create(Map.of(
                 "technologies", String.join(", ", technologies)
         ));
 
