@@ -1,7 +1,6 @@
 package com.vibeslop.backend.controller;
 
 import com.vibeslop.backend.dto.DeveloperDetailDto;
-import com.vibeslop.backend.model.Developer;
 import com.vibeslop.backend.service.DeveloperService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -38,12 +37,11 @@ public class DeveloperController {
      * Example (ANY): GET /api/v1/developers?skills=Java,Docker&match=any
      */
     @GetMapping
-    public ResponseEntity<List<Developer>> findDevelopersBySkills(
+    public ResponseEntity<List<DeveloperDetailDto>> findDevelopersBySkills(
             @RequestParam List<String> skills,
             @RequestParam(defaultValue = "all", required = false) String match) {
 
-        // FIX: Corrected the logic to call the appropriate service method for 'any' match.
-        List<Developer> developers = "any".equalsIgnoreCase(match)
+        List<DeveloperDetailDto> developers = "any".equalsIgnoreCase(match)
                 ? developerService.findDevelopersByAnySkill(skills)
                 : developerService.findDevelopersByAllSkills(skills);
 

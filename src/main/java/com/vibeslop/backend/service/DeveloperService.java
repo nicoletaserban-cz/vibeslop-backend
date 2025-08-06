@@ -31,22 +31,27 @@ public class DeveloperService {
      * For better performance, this could be refactored into a single custom JPQL query.
      */
     @Transactional(readOnly = true)
-    public List<Developer> findDevelopersByAnySkill(List<String> skills) {
+    public List<DeveloperDetailDto> findDevelopersByAnySkill(List<String> skills) {
         if (skills == null || skills.isEmpty()) {
             return Collections.emptyList();
         }
         return skills.stream()
                 .flatMap(skill -> developerRepository.findBySkillsContaining(skill).stream())
-                .distinct().toList();
+                .distinct()
+                .map(this::toDeveloperDetailDto)
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public List<Developer> findDevelopersByAllSkills(List<String> skills) {
+    public List<DeveloperDetailDto> findDevelopersByAllSkills(List<String> skills) {
         if (skills == null || skills.isEmpty()) {
             return Collections.emptyList();
         }
         // We pass the size of the list as a parameter to the custom query.
-        return developerRepository.findByAllSkills(skills, (long) skills.size());
+        List<Developer> developers = developerRepository.findByAllSkills(skills, (long) skills.size());
+        return developers.stream()
+                .map(this::toDeveloperDetailDto)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -60,6 +65,14 @@ public class DeveloperService {
                 .orElseThrow(() -> new ResourceNotFoundException("Developer not found with id: " + id));
 
         // Map the found Developer entity to the DeveloperDetailDto
+        return getDeveloperDetailDto(developer);
+    }
+
+    private DeveloperDetailDto toDeveloperDetailDto(Developer developer) {
+        return getDeveloperDetailDto(developer);
+        }
+
+    private DeveloperDetailDto getDeveloperDetailDto(Developer developer) {
         return new DeveloperDetailDto(
                 developer.getId(),
                 developer.getName(),
