@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  vibeslop-backend:
+    build: .
+    container_name: vibeslop-backend
+    ports:
+      - "8080:8080"
+    environment:
+      # The backend now connects to the 'ollama' service within the Docker network.
+      - SPRING_AI_OLLAMA_BASE_URL=http://ollama:11434
+      # For production, you would point this to a persistent database like PostgreSQL.
+      - SPRING_DATASOURCE_URL=jdbc:h2:mem:vsdb
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    depends_on:
+      - ollama
+
+  ollama:
+    image: ollama/ollama
+    container_name: ollama
+    # Expose the port to the host for direct interaction if needed (e.g., for debugging)
+    ports:
+      - "11434:11434"
+    volumes:
+      # Persist Ollama models in a named volume
+      - ollama_data:/root/.ollama
+
+volumes:
+  ollama_data: {}
