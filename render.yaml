@@ -29,7 +29,7 @@ services:
         generateValue: true # Render will generate a secure random value
 
   # Private Service: The Ollama LLM Server
-  - type: private
+  - type: web
     name: ollama
     image:
       # Use the official Ollama image.
