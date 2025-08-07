@@ -101,7 +101,7 @@ spring.ai.ollama.chat.options.model=llama3
 
 This project is configured for one-click deployment on Render.
 
-[!Deploy to Render](https://render.com/deploy?repo=https://github.com/YOUR_USERNAME/YOUR_REPO)
+[!Deploy to Render](https://render.com/deploy?repo=https://github.com/nicoletaserban-cz/vibeslop-backend)
 
 Clicking the button above will deploy the application based on the `render.yaml` file in this repository.
 
