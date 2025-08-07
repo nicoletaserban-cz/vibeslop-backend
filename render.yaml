@@ -1,0 +1,45 @@
+# render.yaml
+# This file configures the services for deployment on Render.
+# It defines a web service for the Spring Boot application and a private
+# service for Ollama, ensuring they can communicate with each other.
+
+services:
+  # Web Service: The Spring Boot Backend
+  - type: web
+    name: vibeslop-backend
+    env: docker
+    # The region where your services will be deployed.
+    # Choose a region with GPU support if you plan to upgrade Ollama later.
+    region: oregon
+    # Specifies the startup command, which is our custom script.
+    dockerCommand: ./run.sh
+    healthCheck:
+      # Render uses this path to determine if the application has started successfully.
+      path: /actuator/health
+      port: 8080
+    # Environment variables required by the Spring Boot application.
+    # The OLLAMA_BASE_URL points to the private Ollama service below.
+    envVars:
+      - key: SPRING_AI_OLLAMA_BASE_URL
+        value: http://ollama:11434
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
+      # IMPORTANT: Set your JWT secret in the Render dashboard, not here.
+      - key: SPRING_JWT_SECRET
+        generateValue: true # Render will generate a secure random value
+
+  # Private Service: The Ollama LLM Server
+  - type: private
+    name: ollama
+    env: docker
+    image:
+      # Use the official Ollama image.
+      url: ollama/ollama
+    region: oregon
+    # Create and attach a persistent disk to store the downloaded models.
+    # This ensures models are not re-downloaded on every deploy.
+    disks:
+      - name: ollama-data
+        mountPath: /root/.ollama
+        # Llama3 is ~4.7GB, so 5GB is a safe minimum.
+        sizeGB: 5

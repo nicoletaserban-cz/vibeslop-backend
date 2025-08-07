@@ -2,6 +2,7 @@ package com.vibeslop.backend.controller;
 
 import com.vibeslop.backend.dto.InterviewQuestionRequest;
 import com.vibeslop.backend.dto.InterviewRequestDto;
+import com.vibeslop.backend.dto.InterviewQuestionResponse;
 import com.vibeslop.backend.dto.InterviewResponseDto;
 import com.vibeslop.backend.service.InterviewService;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +23,8 @@ public class InterviewController {
     private final InterviewService interviewService;
 
     @PostMapping("/generate")
-    public String generateInterviewQuestions(@RequestBody InterviewQuestionRequest request) {
-        return interviewService.generateQuestions(request.technologies());
+    public InterviewQuestionResponse generateInterviewQuestions(@RequestBody InterviewQuestionRequest request) {
+        return new InterviewQuestionResponse(interviewService.generateQuestions(request.technologies()));
     }
 
     /**
