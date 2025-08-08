@@ -13,10 +13,7 @@ services:
     region: oregon
     # Specifies the startup command, which is our custom script.
     dockerCommand: ./run.sh
-    healthCheckPath:
-      # Render uses this path to determine if the application has started successfully.
-      path: /actuator/health
-      port: 8080
+    healthCheckPath: /actuator/health
     # Environment variables required by the Spring Boot application.
     # The OLLAMA_BASE_URL points to the private Ollama service below.
     envVars:
