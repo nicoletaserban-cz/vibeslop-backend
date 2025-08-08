@@ -28,6 +28,7 @@ services:
   # Private Service: The Ollama LLM Server
   - type: pserv
     name: ollama
+    env: docker
     image:
       # Use the official Ollama image.
       url: ollama/ollama
