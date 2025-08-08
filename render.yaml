@@ -13,7 +13,7 @@ services:
     region: oregon
     # Specifies the startup command, which is our custom script.
     dockerCommand: ./run.sh
-    healthCheck:
+    healthCheckPath:
       # Render uses this path to determine if the application has started successfully.
       path: /actuator/health
       port: 8080
@@ -29,7 +29,7 @@ services:
         generateValue: true # Render will generate a secure random value
 
   # Private Service: The Ollama LLM Server
-  - type: web
+  - type: pserv
     name: ollama
     image:
       # Use the official Ollama image.
@@ -37,8 +37,8 @@ services:
     region: oregon
     # Create and attach a persistent disk to store the downloaded models.
     # This ensures models are not re-downloaded on every deploy.
-    disks:
-      - name: ollama-data
-        mountPath: /root/.ollama
-        # Llama3 is ~4.7GB, so 5GB is a safe minimum.
-        sizeGB: 5
+    disk:
+      name: ollama-data
+      mountPath: /root/.ollama
+      # Llama3 is ~4.7GB, so 5GB is a safe minimum.
+      sizeGB: 5
