@@ -9,9 +9,15 @@ import org.springframework.core.io.Resource;
 @Configuration
 public class PromptConfig {
 
+    @Value("classpath:/prompts/interview-questions.st")
+    private Resource interviewQuestionsResource;
+
+    @Value("classpath:/prompts/interview-feedback.st")
+    private Resource interviewFeedbackResource;
+
     @Bean
-    public PromptTemplate interviewQuestionsPromptTemplate(
-        @Value("${spring.ai.prompt.interview-questions.path}") Resource resource) {
-            return new PromptTemplate(resource);
-        }
+    public PromptTemplate interviewQuestionsPromptTemplate() { return new PromptTemplate(interviewQuestionsResource); }
+
+    @Bean
+    public PromptTemplate interviewFeedbackPromptTemplate() { return new PromptTemplate(interviewFeedbackResource); }
 }

@@ -1,8 +1,9 @@
 package com.vibeslop.backend.controller;
 
+import com.vibeslop.backend.dto.InterviewFeedbackRequest;
+import com.vibeslop.backend.dto.InterviewFeedbackResponse;
 import com.vibeslop.backend.dto.InterviewQuestionRequest;
 import com.vibeslop.backend.dto.InterviewRequestDto;
-import com.vibeslop.backend.dto.InterviewQuestionResponse;
 import com.vibeslop.backend.dto.InterviewResponseDto;
 import com.vibeslop.backend.service.InterviewService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import com.vibeslop.backend.dto.InterviewQuestionResponse;
 
 @RestController
 @RequestMapping("/api/v1/interviews")
@@ -22,9 +24,15 @@ public class InterviewController {
 
     private final InterviewService interviewService;
 
-    @PostMapping("/generate")
+    @PostMapping("/generate-questions")
     public InterviewQuestionResponse generateInterviewQuestions(@RequestBody InterviewQuestionRequest request) {
         return new InterviewQuestionResponse(interviewService.generateQuestions(request.technologies()));
+    }
+
+    @PostMapping("/generate-feedback")
+    public InterviewFeedbackResponse generateFeedback(@RequestBody InterviewFeedbackRequest request) {
+        String feedback = interviewService.generateFeedback(request.interviewTranscript());
+        return new InterviewFeedbackResponse(feedback);
     }
 
     /**

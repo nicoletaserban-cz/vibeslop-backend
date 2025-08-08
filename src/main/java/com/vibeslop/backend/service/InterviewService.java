@@ -27,6 +27,7 @@ public class InterviewService {
     private final DeveloperRepository developerRepository;
     private final ClientRepository clientRepository;
     private final PromptTemplate interviewQuestionsPromptTemplate;
+    private final PromptTemplate interviewFeedbackPromptTemplate;
 
     /**
      * Generates interview questions based on a list of technologies.*
@@ -40,6 +41,19 @@ public class InterviewService {
                 "technologies", String.join(", ", technologies)
         ));
 
+        return chatClient.call(prompt).getResult().getOutput().getText();
+    }
+
+    /**
+     * Generates interview feedback based on a transcript.
+     *
+     * @param interviewTranscript The transcript of the interview.
+     * @return A string containing structured feedback.
+     */
+    public String generateFeedback(String interviewTranscript) {
+        var prompt = this.interviewFeedbackPromptTemplate.create(Map.of(
+                "interviewTranscript", interviewTranscript
+        ));
         return chatClient.call(prompt).getResult().getOutput().getText();
     }
 

@@ -45,6 +45,8 @@ class InterviewServiceTest {
     private ClientRepository clientRepository;
     @Mock
     private PromptTemplate interviewQuestionsPromptTemplate;
+    @Mock
+    private PromptTemplate interviewFeedbackPromptTemplate;
 
     @InjectMocks
     private InterviewService interviewService;
@@ -82,6 +84,22 @@ class InterviewServiceTest {
         when(chatClient.call(any(Prompt.class))).thenReturn(chatResponse);
 
         String actualResponse = interviewService.generateQuestions(technologies);
+
+        assertThat(actualResponse).isEqualTo(expectedResponse);
+    }
+
+    @Test
+    void generateFeedback_shouldReturnStringFromAI() {
+        String transcript = "Candidate was asked about Java...";
+        Prompt prompt = new Prompt("test feedback prompt");
+        String expectedResponse = "Here is some feedback...";
+        Generation generation = new Generation(new AssistantMessage(expectedResponse));
+        ChatResponse chatResponse = new ChatResponse(List.of(generation));
+
+        when(interviewFeedbackPromptTemplate.create(Map.of("transcript", transcript))).thenReturn(prompt);
+        when(chatClient.call(any(Prompt.class))).thenReturn(chatResponse);
+
+        String actualResponse = interviewService.generateFeedback(transcript);
 
         assertThat(actualResponse).isEqualTo(expectedResponse);
     }

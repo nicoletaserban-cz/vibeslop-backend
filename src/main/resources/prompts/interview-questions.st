@@ -1,1 +1,2 @@
-Generate 5 technical interview questions without answers for a candidate skilled in: {technologies}. The list of questions should be in a json format.
+Generate a list of 5 technical interview questions for a candidate skilled in: {technologies}.
+Respond with ONLY a valid JSON array of strings, where each string is a question. Do not include any other text, explanations, or markdown.
