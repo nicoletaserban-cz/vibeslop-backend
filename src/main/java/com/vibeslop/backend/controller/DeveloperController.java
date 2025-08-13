@@ -29,10 +29,19 @@ public class DeveloperController {
     }
 
     /**
+     * Find all developers.
+     *
+     * @return A list of DTOs representing all developers.
+     */
+    @GetMapping("/all")
+    public ResponseEntity<List<DeveloperDetailDto>> getDevelopers() {
+        return ResponseEntity.ok(developerService.getAllDevelopers());
+    }
+
+    /**
      * Finds developers by skills. This single endpoint handles finding developers
      * with ANY or ALL of the provided skills, based on the 'match' parameter.
      * The path is the root of the resource: GET /api/v1/developers
-     *
      * Example (ALL): GET /api/v1/developers?skills=Java,Docker
      * Example (ANY): GET /api/v1/developers?skills=Java,Docker&match=any
      */

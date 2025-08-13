@@ -1,2 +1,2 @@
 Generate a list of 5 technical interview questions for a candidate skilled in: {technologies}.
-Respond with ONLY a valid JSON array of strings, where each string is a question. Do not include any other text, explanations, or markdown.
+Respond with ONLY a valid JSON. Each question is a node in a Json Array. Do not include any other text, explanations, or markdown.

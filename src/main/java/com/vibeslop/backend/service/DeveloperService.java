@@ -55,6 +55,18 @@ public class DeveloperService {
     }
 
     /**
+     * Retrieves all developers from the database.
+     *
+     * @return A list of DTOs representing all developers.
+     */
+    @Transactional(readOnly = true)
+    public List<DeveloperDetailDto> getAllDevelopers() {
+        return developerRepository.findAll().stream()
+                .map(this::toDeveloperDetailDto)
+                .collect(Collectors.toList());
+    }
+
+    /**
      * Finds a single developer by their ID.
      * FIX: Throws a custom ResourceNotFoundException if the developer does not exist,
      * preventing NullPointerExceptions and providing a clean 404 response.
@@ -64,15 +76,10 @@ public class DeveloperService {
         Developer developer = developerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Developer not found with id: " + id));
 
-        // Map the found Developer entity to the DeveloperDetailDto
-        return getDeveloperDetailDto(developer);
+        return toDeveloperDetailDto(developer);
     }
 
     private DeveloperDetailDto toDeveloperDetailDto(Developer developer) {
-        return getDeveloperDetailDto(developer);
-        }
-
-    private DeveloperDetailDto getDeveloperDetailDto(Developer developer) {
         return new DeveloperDetailDto(
                 developer.getId(),
                 developer.getName(),
